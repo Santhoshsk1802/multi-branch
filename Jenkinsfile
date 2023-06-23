@@ -26,7 +26,7 @@ pipeline {
       stage('Docker Build') {
         steps{
           script{
-            sh 'docker build -t comdevops/multi:v2 .'
+            sh 'docker build -t santhoshkumarsk/multi:v2 .'
             //sh 'docker images'
           }
         }
@@ -34,10 +34,10 @@ pipeline {
       stage('Docker push'){
         steps{
           script{
-            withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-              sh "docker login -u comdevops -p ${dockerPassword}"
-              sh 'docker push comdevops/multi:v2'
-              sh 'docker rmi comdevops/multi:v2'
+            withCredentials([string(credentialsId: 'dockerpass', variable: 'dockerPassword')]) {
+              sh "docker login -u santhoshkumarsk -p ${dockerPassword}"
+              sh 'docker push santhoshkumarsk/multi:v2'
+              sh 'docker rmi santhoshkumarsk/multi:v2'
             }
           }
         }
@@ -45,7 +45,7 @@ pipeline {
       stage('Deploy on k8s') {    
         steps {
           script{
-            withKubeCredentials(kubectlCredentials: [[ credentialsId: 'kubernetes', namespace: 'ms' ]]) {
+            withKubeCredentials(kubectlCredentials: [[ credentialsId: 'k8', namespace: 'ms' ]]) {
                 sh 'kubectl apply -f kube.yaml'
             }
           }
